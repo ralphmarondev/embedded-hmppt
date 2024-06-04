@@ -1,25 +1,24 @@
-#include <Servo.h>
+#define PIN 13
 
-Servo servoMotor;
-int i = 0;
-
-void setup() {
+void setup(){
   Serial.begin(9600);
-  servoMotor.attach(9);  // Attach servo to pin 9
+  pinMode(PIN, OUTPUT);
 }
 
-void loop() {
-    int angle = i;
-    if (angle >= 0 && angle <= 180) {
-      servoMotor.write(angle);
+void loop(){
+  if(Serial.available() > 0){
+    String msg = Serial.readString();
+
+    if (msg == "ON"){
+      digitalWrite(PIN, HIGH);
     }
-    Serial.println(angle);
-    i++;
+    else if (msg == "OFF"){
+      digitalWrite(PIN, LOW);
+    }
+    else{
+      digitalWrite(PIN, HIGH);
+      delay(1000);
+      digitalWrite(PIN, LOW);
+    }
+  }
 }
-
-/*
-recieve:
-diffy
-- camera center y and object center y
-
-*/
