@@ -1,29 +1,18 @@
-import serial.tools.list_ports as port
-import serial 
+import serial
+import time 
 
-ports = port.comports()
-serialInst = serial.Serial()
-portsList = []
+arduino_port = '/dev/ttyACM0'
+baud_rate = 9600
 
-for onePort in ports:
-    portsList.append(str(onePort))
-    print(str(onePort))
+ser = serial.Serial(arduino_port, baud_rate, timeout=1)
+time.sleep(2)
 
-val = input('Select Port: COM')
+def send_data(data):
+    ser.write(data.encode())
+    time.sleep(0.1)
+    
+send_data('A')
+send_data('B')
 
-for x in range(0, len(portsList)):
-    if portsList[x].startswith('COM' + str(val)):
-        portVar = 'COM' + str(val)
-        print(portVar)
-
-serialInst.baudrate = 9600
-serialInst.port = portVar
-serialInst.open()
-
-while True:
-    command = input("Arduino Comman: (On/OFF): ")
-    serialInst.write(command.encode('utf-8'))
-
-    if command == 'exit':
-        exit()
+ser.close()
 
