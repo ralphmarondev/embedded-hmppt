@@ -7,6 +7,22 @@ diffy
 import cv2
 import math
 
+# arduino stuff
+import serial
+# import time 
+
+
+ser = serial.Serial(port='COM4', baudrate=9600, timeout=1)
+# time.sleep(2)
+
+def send_data(data):
+    ser.write(bytes(data, 'utf-8'))
+    # time.sleep(0.1)
+    data = ser.readline()
+    return data
+
+# arduino stuff end
+
 # Load pre-trained face detector
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
@@ -64,8 +80,12 @@ while True:
         # Print diffx and diffy
         print(f"diffx: {diffx}, diffy: {diffy}")
 
+        # send to arduino
+        send_data(str(diffx))
+
+
     # Display the frame
-    # cv2.imshow('Ralph Maron Eda is cute. Object Detection Frame', frame)
+    cv2.imshow('Ralph Maron Eda is cute. Object Detection Frame', frame)
 
     # Break the loop if 'q' is pressed
     if cv2.waitKey(1) & 0xFF == ord('q'):

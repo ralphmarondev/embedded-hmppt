@@ -11,12 +11,18 @@ void loop(){
   if (Serial.available() > 0) {
     num = Serial.readString().toInt();
 
-    if (num < 4) {
-      digitalWrite(LED_OUT, LOW);
-    } else if (num > 4) {
+    // if (num < 4) {
+    //   digitalWrite(LED_OUT, LOW);
+    // } else if (num > 4) {
+    //   digitalWrite(LED_OUT, HIGH);
+    // } else {
+    //   blink();
+    // }
+
+    if(num > 0){
       digitalWrite(LED_OUT, HIGH);
-    } else {
-      blink();
+    }else{
+      digitalWrite(LED_OUT, LOW);
     }
   }
 }

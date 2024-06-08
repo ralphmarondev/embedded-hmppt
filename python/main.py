@@ -12,6 +12,7 @@ def send_data(data):
     return data
 
 while True: 
-    send_data('5')
+    n = input('Enter number: ')
+    send_data(n)
 
 ser.close()
