@@ -1,35 +1,31 @@
-#define LED_OUT 13
+#define LED_OUT_X 2
+#define LED_OUT_Y 3
 
-int num = 0;
+String loc;
+int locX, locY;
 
 void setup(){
   Serial.begin(9600);
-  pinMode(LED_OUT, OUTPUT);
+  pinMode(LED_OUT_X, OUTPUT);
+  pinMode(LED_OUT_Y, OUTPUT);
 }
 
 void loop(){
   if (Serial.available() > 0) {
-    num = Serial.readString().toInt();
+    loc = Serial.readString();
+    locX = loc.substring(0, 4).toInt();
+    locY = loc.substring(5, 9).toInt();
 
-    // if (num < 4) {
-    //   digitalWrite(LED_OUT, LOW);
-    // } else if (num > 4) {
-    //   digitalWrite(LED_OUT, HIGH);
-    // } else {
-    //   blink();
-    // }
-
-    if(num > 0){
-      digitalWrite(LED_OUT, HIGH);
+    if(locX > 0){
+      digitalWrite(LED_OUT_X, HIGH);
     }else{
-      digitalWrite(LED_OUT, LOW);
+      digitalWrite(LED_OUT_X, LOW);
+    }
+
+    if(locY > 0){
+      digitalWrite(LED_OUT_Y, HIGH);
+    }else{
+      digitalWrite(LED_OUT_Y, LOW);
     }
   }
-}
-
-void blink(){
-  digitalWrite(LED_OUT, HIGH);
-  delay(100);
-  digitalWrite(LED_OUT, LOW);
-  delay(100);                   
 }

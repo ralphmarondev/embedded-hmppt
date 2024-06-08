@@ -81,7 +81,9 @@ while True:
         print(f"diffx: {diffx}, diffy: {diffy}")
 
         # send to arduino
-        send_data(str(diffx))
+        strDiffX = str(f"{diffx:0{5}d}")
+        strDiffY = str(f"{diffy:0{5}d}")
+        send_data(strDiffX + strDiffY)
 
 
     # Display the frame
