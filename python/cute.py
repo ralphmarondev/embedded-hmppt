@@ -41,6 +41,10 @@ while True:
             min_distance = distance
             nearest_face = (x, y, w, h)
 
+    # initialize distance into zero
+    diffx = 0
+    diffy = 0
+
     # Draw rectangle around nearest face
     if nearest_face is not None:
         x, y, w, h = nearest_face
@@ -61,7 +65,7 @@ while True:
         print(f"diffx: {diffx}, diffy: {diffy}")
 
     # Display the frame
-    cv2.imshow('Ralph Maron Eda is cute. Object Detection Frame', frame)
+    # cv2.imshow('Ralph Maron Eda is cute. Object Detection Frame', frame)
 
     # Break the loop if 'q' is pressed
     if cv2.waitKey(1) & 0xFF == ord('q'):
