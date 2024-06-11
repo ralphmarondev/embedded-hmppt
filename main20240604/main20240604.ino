@@ -5,9 +5,7 @@
 #define SERVO_PAN 3
 #define SERVO_FIRE 4
 
-int servoPosTilt;
-int servoPosPan;
-int servoPosFire;
+int servoPosFire = 0;
 
 Servo servoTilt;
 Servo servoPan;
@@ -21,8 +19,8 @@ float duration, distance;
 
 //Object Location Initializations
 String objectPos;
-int objectPosX = 0;
-int objectPosY = 0;
+int objectPosX;
+int objectPosY;
 
 #define OBJ_TOLERANCE 30
 
@@ -35,48 +33,48 @@ void setup() {
   servoPan.attach(SERVO_PAN);
   servoFire.attach(SERVO_FIRE);
 
-  servoPosTilt = 90;
-  servoPosPan = 135;
-  servoPosFire = 0;
+  servoTilt.write(90);
+  servoPan.write(90);
 
   //Ultrasonic Initialization
   pinMode(TRIG_PIN, OUTPUT);
   pinMode(ECHO_PIN, INPUT);
 }
 
+//position servos
+void position_servos(){
+  int servoPosPan = map(objectPosX, 640, 0, 70, 179);
+  int servoPosTilt = map(objectPosY, 480, 0, 179, 95);
+
+  servoPosPan = min(servoPosPan, 179);
+  servoPosPan = max(servoPosPan, 179);
+  servoPosTilt = min(servoPosTilt, 179);
+  servoPosTilt = min(servoPosTilt, 95);
+
+  servoPan.write(servoPosPan);
+  servoTilt.write(servoPosTilt);
+}
+
 void loop() {
   //Communication between Python Code and arduino
   if (Serial.available() > 0) {
     objectPos = Serial.readString();
-    objectPosX = objectPos.substring(0, 4).toInt();
-    objectPosY = objectPos.substring(5, 9).toInt();
+    objectPosX = objectPos.substring(1, 3).toInt();
+    objectPosY = objectPos.substring(5, 7).toInt();  
 
-    if (objectPosX > 0) {
-      servoPosPan += 10;
-    } else {
-      servoPosPan;
-    }
-
-    if (objectPosY > 0) {
-      servoPosTilt++;
-    }else{
-      servoPosTilt--;
-    }
+    position_servos();
   }
 
-  servoTilt.write(servoPosTilt);
-  servoPan.write(servoPosPan);
-
   //firing mechanism
-  int objectDistance = distanceDetection();
+  int objectDistance = distance_detection();
   if (objectDistance < 5){
-    firingMechanismActivate();
+    firing_mechanism_activate();
   } else {
-    firingMechanismStop();
+    firing_mechanism_stop();
   }
 }
 
-int distanceDetection(){
+int distance_detection(){
   digitalWrite(TRIG_PIN, LOW);
   delayMicroseconds(2);
   digitalWrite(TRIG_PIN, HIGH);
@@ -89,7 +87,7 @@ int distanceDetection(){
   return distance;
 }
 
-void firingMechanismActivate(){
+void firing_mechanism_activate(){
   for (servoPosFire = 0; servoPosFire <= 180; servoPosFire += 5) {
     servoFire.write(servoPosFire);
     delay(15);
@@ -100,6 +98,6 @@ void firingMechanismActivate(){
   }
 }
 
-void firingMechanismStop(){
+void firing_mechanism_stop(){
   servoFire.write(0);
 }

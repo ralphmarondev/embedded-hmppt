@@ -27,7 +27,9 @@ def send_data(data):
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
 # Capture video from webcam
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
+
+tolerance = 30
 
 while True:
     # Read a frame from the video capture
@@ -57,6 +59,8 @@ while True:
             min_distance = distance
             nearest_face = (x, y, w, h)
 
+    cv2.rectangle(frame, (camera_center_x - tolerance, camera_center_y - tolerance), (camera_center_x + tolerance, camera_center_y + tolerance), (255, 255, 255), 2)
+
     # initialize distance into zero
     diffx = 0
     diffy = 0
@@ -78,8 +82,8 @@ while True:
         cv2.putText(frame, f'Angle: {angle}', (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
 
         # send to arduino
-        strDiffX = str(f"{diffx:0{5}d}")
-        strDiffY = str(f"{diffy:0{5}d}")
+        strDiffX = 'X{0:d}'.format(x + w // 2)
+        strDiffY = 'Y{0:d}'.format(y + h // 2)
         send_data(strDiffX + strDiffY)
         # Print diffx and diffy
         print(strDiffX + strDiffY)
