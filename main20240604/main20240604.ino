@@ -24,22 +24,6 @@ int objectPosY;
 
 #define OBJ_TOLERANCE 30
 
-void setup() {
-  //Serial initializations
-  Serial.begin(9600);
-
-  //Servo Initializations
-  servoTilt.attach(SERVO_TILT);
-  servoPan.attach(SERVO_PAN);
-  servoFire.attach(SERVO_FIRE);
-
-  servoTilt.write(90);
-  servoPan.write(90);
-
-  //Ultrasonic Initialization
-  pinMode(TRIG_PIN, OUTPUT);
-  pinMode(ECHO_PIN, INPUT);
-}
 
 //position servos
 void position_servos(){
@@ -53,25 +37,6 @@ void position_servos(){
 
   servoPan.write(servoPosPan);
   servoTilt.write(servoPosTilt);
-}
-
-void loop() {
-  //Communication between Python Code and arduino
-  if (Serial.available() > 0) {
-    objectPos = Serial.readString();
-    objectPosX = objectPos.substring(1, 3).toInt();
-    objectPosY = objectPos.substring(5, 7).toInt();  
-
-    position_servos();
-  }
-
-  //firing mechanism
-  int objectDistance = distance_detection();
-  if (objectDistance < 5){
-    firing_mechanism_activate();
-  } else {
-    firing_mechanism_stop();
-  }
 }
 
 int distance_detection(){
@@ -100,4 +65,43 @@ void firing_mechanism_activate(){
 
 void firing_mechanism_stop(){
   servoFire.write(0);
+}
+
+
+void setup() {
+  //Serial initializations
+  Serial.begin(9600);
+
+  //Servo Initializations
+  servoTilt.attach(SERVO_TILT);
+  servoPan.attach(SERVO_PAN);
+  servoFire.attach(SERVO_FIRE);
+
+  servoTilt.write(90);
+  servoPan.write(90);
+
+  //Ultrasonic Initialization
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+}
+
+void loop() {
+  //Communication between Python Code and arduino
+  if (Serial.available() > 0) {
+    objectPos = Serial.readString();
+    objectPosX = objectPos.substring(1, 3).toInt();
+    objectPosY = objectPos.substring(5, 7).toInt();  
+
+    position_servos();
+
+    //Serial.println(objectPosX + " " + objectPosY);
+  }
+
+  //firing mechanism
+  int objectDistance = distance_detection();
+  if (objectDistance < 5){
+    firing_mechanism_activate();
+  } else {
+    firing_mechanism_stop();
+  }
 }

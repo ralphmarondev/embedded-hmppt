@@ -11,8 +11,10 @@ import math
 import serial
 # import time 
 
+serialPort = 'COM4'
+serialBaudRate = 9600
 
-ser = serial.Serial(port='COM5', baudrate=9600, timeout=1)
+ser = serial.Serial(port=serialPort, baudrate=serialBaudRate, timeout=1)
 # time.sleep(2)
 
 def send_data(data):
@@ -27,7 +29,7 @@ def send_data(data):
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
 # Capture video from webcam
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 tolerance = 30
 
